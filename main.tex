@@ -7,6 +7,8 @@
 \setlength{\columnsep}{1cm}
 \usepackage[utf8]{inputenc}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{comment}
+
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
@@ -199,7 +201,7 @@ In Abhängigkeit von der Eingabegröße $\|x\|$ (Anzahl der Elemente $n$ und der
 
 Die Gesamtlaufzeit hat die Form $O(poly(n) + f(1/\epsilon) \cdot poly(n))$. Für jedes \textit{feste} $\epsilon > 0$ ergibt dies eine polynomiale Laufzeit bzgl. der Eingabegröße, da der exponentielle Term $2^{1/\epsilon}$ dann eine (potenziell sehr große) Konstante darstellt.
 
-\section*{Eigenschaften der PTAS-Red.}
+\section*{PTAS-Reduktion}
 
 Übertrage die Approximierbarkeit eines Problems $A$ auf ein Problem $B$. Hier müssen nicht nur die Instanzen, sondern auch die Fehlerparameter und Lösungen transformiert werden.
 
@@ -211,6 +213,7 @@ Eine PTAS-Reduktion $A \le_{PTAS} B$ besteht aus einem Tripel $\rho = (f, g, \al
     \item \textbf{Fehler-Funktion $\alpha(\epsilon)$:} Berechnet aus dem gewünschten Fehler $\epsilon$ für Problem $A$ den notwendigen Fehler für Problem $B$. $\alpha$ muss in Polynomialzeit berechenbar sein.
 \end{itemize}
 
+\begin{comment}
 \subsection*{Transitivität}
 PTAS-Reduktionen sind transitiv. Gilt $A \le_{PTAS}^{\rho_1} B$ und $B \le_{PTAS}^{\rho_2} C$, so folgt daraus $A \le_{PTAS}^{\rho} C$ mit $\rho = (f, g, \alpha)$. Die resultierenden Funktionen ergeben sich aus der Komposition der Einzelreduktionen:
 
@@ -219,11 +222,20 @@ PTAS-Reduktionen sind transitiv. Gilt $A \le_{PTAS}^{\rho_1} B$ und $B \le_{PTAS
     \item \textbf{Lösungs-Mapping:} \[g(x, y, \epsilon) = g_1(x, g_2(f_1(x, \epsilon), y, \alpha_1(\epsilon)), \epsilon)\]
     \item \textbf{Fehler-Mapping:} $\alpha(\epsilon) = \alpha_2(\alpha_1(\epsilon))$ .
 \end{enumerate}
+\end{comment}
 
 \subsection*{Erhalt der Approximationsgüte}
 Das zentrale Gütekriterium einer PTAS-Reduktion ist die Erhaltung der Fehlerschranke. Muss zeigen:
 \[ \Gamma(f(x, \epsilon), y) \le 1 + \alpha(\epsilon) \implies \Gamma(x, g(x, y, \epsilon)) \le 1 + \epsilon \]
-Dies garantiert, dass ein PTAS für Problem $B$ zusammen mit der Reduktion $\rho$ automatisch ein PTAS für Problem $A$ liefert.
+
+\begin{enumerate}
+    \item Sei $B$ eine Lösung für $f(x,\epsilon)$.
+    \item Sei $B^\ast$ die optimale Lösung für $f(x, \epsilon)$
+    \item Dann gilt
+    \[\frac{\mu(B)}{\mu(B^\ast)}=\Gamma_{\mu'}(f(x, \epsilon),B)\leq 1 + \alpha(\epsilon)=1+\epsilon\]
+    \item \[\frac{\text{Maß für x}}{\text{Optimum für x}}\leq\frac{\mu(B)}{\mu(B^\ast)}=1+\epsilon\]
+\end{enumerate}
+
 \vfill\null \columnbreak
 
 \section*{Eigenschaften einer Metrik}
@@ -379,7 +391,7 @@ Für einen gegebenen r:
     \item Bestimme den (Nicht-)Ablehnungsbereich für die Werte von N.
 \end{enumerate}
 
-\vfill\null\columnbreak
+%\vfill\null\columnbreak
 \section*{Likelihood Ratio Test}
 
 \begin{enumerate}
@@ -427,7 +439,21 @@ Zeige, dass eine Zufallsvariablenfolge Markov-Kette ist: \[\text{Ws}[X_n=q_n\mid
 \textbf{Stationäre Verteilung} $\hat{p}$ findet man mit:
 \[\hat{p}\cdot P =\hat{p}\]
 
-\textbf{ergodisch} $\iff$ \textbf{irreduzibel} $\land$ \textbf{aperiodisch}
+\textbf{ergodisch} $\iff$ \textbf{irreduzibel} $\land$ \textbf{aperiodisch} \\
+Sei $(Q, P, \pi)$ ein Markov-Modell.
+\begin{enumerate}
+    \item \textbf{aperiodisch:} wenn alle Zustände $q \in Q$ aperiodisch sind (also Periode 1 haben). Die Periode $d_q$ eines Zustands $q \in Q$ ist definiert als
+\[
+d_q := \text{ggT} \left\{ k \in \mathbb{N} : 
+\begin{aligned} 
+&\exists (q_0, \dots, q_k) \in Q^{k+1} \wedge q_0 = q_k = q \\ 
+&\wedge \ \forall i \in [0 : k-1] p_{q_i, q_{i+1}} > 0 
+\end{aligned} 
+\right\}.
+\]
+
+    \item \textbf{irreduzibel:} wenn es für alle Paare $(q,q') \in Q^2$ ein $k\in \mathbb{N}$ gibt, so dass $p_{q,q'}^{(k)}>0$.
+\end{enumerate}
 
 \end{multicols}
 \end{document}
