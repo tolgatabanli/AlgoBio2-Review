@@ -229,10 +229,9 @@ Das zentrale Gütekriterium einer PTAS-Reduktion ist die Erhaltung der Fehlersch
 \[ \Gamma(f(x, \epsilon), y) \le 1 + \alpha(\epsilon) \implies \Gamma(x, g(x, y, \epsilon)) \le 1 + \epsilon \]
 
 \begin{enumerate}
-    \item Sei $B$ eine Lösung für $f(x,\epsilon)$.
-    \item Sei $B^\ast$ die optimale Lösung für $f(x, \epsilon)$
+    \item Sei $S$ eine Lösung für $f(x,\epsilon)$ und $S^\ast$ die optimale.
     \item Dann gilt
-    \[\frac{\mu(B)}{\mu(B^\ast)}=\Gamma_{\mu'}(f(x, \epsilon),B)\leq 1 + \alpha(\epsilon)=1+\epsilon\]
+    \[\frac{\text{Maß für }f(x, \epsilon)}{\text{Opt. für }f(x, \epsilon)}=\Gamma_{\mu'}(f(x, \epsilon),S)\leq 1 + \alpha(\epsilon)=1+\epsilon\]
     \item \[\frac{\text{Maß für x}}{\text{Optimum für x}}\leq\frac{\mu(B)}{\mu(B^\ast)}=1+\epsilon\]
 \end{enumerate}
 
@@ -375,7 +374,7 @@ Für einen gegebenen r:
 \begin{enumerate}
     \item Likelihood-Funktion: $L(p):=L(p;n)=\dots$
     \item Ziel: Finde $\theta^\ast:=\argmax_{p\in \Theta}\{L([n\mid N,p])\}$
-    \item Umformen zu Log-Lik: $\ln(L(p)=\dots$
+    \item Umformen zu Log-Lik: $\ln(L(p))=\dots$
     \item Ableitung: \[\frac{\text{d}}{\text{d}p}\ln(L(p))=\dots \overset{!}{=}0 \rightarrow \text{Finde eine Nullstelle}\].
     \item Überprüfe ob Maximum mit
     \[\frac{\text{d}^2}{\text{d}p^2}\ln(L(p))=\dots \overset{?}{<}0\]
