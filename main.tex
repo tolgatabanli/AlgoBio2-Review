@@ -297,6 +297,19 @@ Ein optimaler Steiner-String ist
 }
 \end{algorithm}
 
+\section*{C-optimale Schnittpositionsfamilie}
+\textbf{Gegeben:} eine Menge von Sequenzen $S$ (hier drei: $s_1,s_2,s_3$) und ein Index $c_1$.\\
+\textbf{Gefragt:} C-optimale Schnittpositionen und MSA.
+\begin{enumerate}
+    \item Für paarweise verschiedene Sequenzen berechne die Präfix (P) und Suffix (S) Matrizen. Achte darauf, dass die S-Matrix ab der unten rechten Ecke ausgefüllt wird.
+    \item Berechne die Zusatzkostenmatrix (C): Zellenweise Addition von P und S minus der Alignment-Score.
+    \item Berechne die finale Matrix $C(c_1, i, j)$ mit
+    \[C(c_1,i,j):=C_{s_1, s_2}(c_1,i)+C_{s_1,s_3}(c_1,j)+C_{s_2,s_3}(i,j)\]
+    Das heißt: Halte in den Zusatzkostenmatrizen von $s_1$-$s_2$ und $s_1$-$s_3$ die $c_1$-te Zeile fest. Dann addiere die Zahl in der $i$-ten Spalte von der $s_1$-$s_2$-Matrix und die Zahl in der $j$-ten Spalte von der $s_1$-$s_3$-Matrix zu der Zelle $(i,j)$ in der Matrix von $s_2$-$s_3$.
+    \item Bestimme in der finalen Matrix die kleinsten Zahlen und ihre Koordinaten. $\rightarrow$ C-optimale Schnittpositionen bzgl. $c_1$ $\rightarrow \{(c_1, x_1, y_2), (c_1, x_2, y_2), \dots\}$ 
+    \item Koordinaten zu Alignments interpretieren: $(c_1, x_1, y_2) \rightarrow$ \glqq Nimm die ersten $c_1$ Buchstaben von $s_1$, die ersten $x_1$ von $s_2$ und die ersten $y_2$ von $s_3$. Aligniere diese und die Restlichen optimal.\grqq
+\end{enumerate}
+
 \vfill\null \pagebreak
 \begin{multicols}{2}
 
