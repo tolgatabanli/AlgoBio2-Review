@@ -1,19 +1,27 @@
 name: Build LaTeX Document
 on: [push]
+
+permissions:
+  contents: write
+  
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Git repository
+      - name: checkout
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX document
+      - name: compile latex
         uses: xu-cheng/latex-action@v4
         with:
           root_file: main.tex
 
-      - name: Upload PDF
-        uses: actions/upload-artifact@v4
+      - name: deploy as GitHub pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          name: PDF
-          path: main.pdf
+          folder: .
+          branch: gh-pages
+          target-folder: .
+          single-commit: true
+          clean: true
