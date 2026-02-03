@@ -344,7 +344,7 @@ $D(v,s)=0$ falls $v$ Blatt mit $s_v=s$
 \\ \\
 \textbf{Uniform:} Ein gelifteter Baum heißt uniform, wenn für jeden Knoten eines Levels entweder alle gelifteten Sequenzen nur vom linken oder nur vom rechten Kind stammen. Durch eine Markierung der Wurzel mit $s\in S$ wird ein eindeutiges uniformes Lifting beschrieben.
 
-\vfill\null \columnbreak
+%\vfill\null \columnbreak
 \section*{PAM-Matrix}
 \begin{enumerate}
     \item Relative Häufigkeiten:
@@ -353,9 +353,21 @@ $D(v,s)=0$ falls $v$ Blatt mit $s_v=s$
     \[p_{a,b}:=\frac{n_{a,b}}{2n}\cdot\frac{1}{p_a}\cdot\frac{1}{100}\]
     \[p_{a,a}:=1-\sum_{\substack{b\in\Sigma \\ b\neq a}} p_{a,b}\]
     \item als Kostenfunktion:
-    \[w(a,b)=\log(\frac{n_{a,b}}{200\cdot n\cdot p_a \cdot p_b})\]
-    \[w(a,a):=\log(\frac{200\cdot n\cdot p_a-\sum_{b\in\Sigma}n_{a,b}}{200\cdot n\cdot p_a^2})\]
+        \begin{align*}
+        w(a,b) &= \log \left( \frac{p_a \cdot p_{a,b}}{p_a \cdot p_b} \right) \\
+        &= \log \left( \frac{n_{a,b}}{200 \cdot n \cdot p_a \cdot p_b} \right)
+        \end{align*}
+        \begin{align*}
+        w(a,a) &= \log \left( \frac{p_a \cdot p_{a,a}}{p_a \cdot p_a} \right) \\
+        &= \log \left( \frac{200 \cdot n \cdot p_a - \sum_{b \in \Sigma} n_{a,b}}{200 \cdot n \cdot p_a^2} \right).
+        \end{align*}
 \end{enumerate}
+
+% Equation block for w(a, b)
+
+
+% Equation block for w(a, a)
+
 
 \section*{BLOSUM-Matrix}
 Für einen gegebenen r:
@@ -364,7 +376,7 @@ Für einen gegebenen r:
     \item Teile die Sequenzen nach ihren Längen in Blocks auf.
     \item In jedem Block gruppiere die Sequenzen in Clustern nach ihrer Ähnlichkeit, so dass die Sequenzidentität eines Clusters nach Single-Linkage nicht weniger als r\% beträgt.
     \item Bestimme $H_{p,q}^{(\beta)}(a,b)$: zähle Positionen in paarweisen Alignments, wo $a$ und $b$ gegenüberstehen, dividiert durch $|C_p|\cdot|C_q|$.
-    \item Bestimme $H(a,b)$: Summiere die Matrizen zellenweise.
+    \item $H(a,b)$: Summiere die Matrizen zellenweise.
     \item \[q_{ab}:=\frac{H(a,b)}{\sum_{a,b\in\Sigma}H(a,b)}\]
     \[p_a:=\frac{\sum_{b\in \Sigma}H(a,b)}{\Sigma_{a,b\in\Sigma}H(a,b)}\]
     \item \[w(a,b):=\log_2(\frac{q_{a,b}}{p_a\cdot p_b})\]
@@ -373,13 +385,22 @@ Für einen gegebenen r:
 \section*{Maximum-Likelihood-Schätzer}
 \begin{enumerate}
     \item Likelihood-Funktion: $L(p):=L(p;n)=\dots$
-    \item Ziel: Finde $\theta^\ast:=\argmax_{p\in \Theta}\{L([n\mid N,p])\}$
+    \item Ziel: Finde $\theta^\ast:=\argmax_{p\in \Theta}\{L([n\mid N,p])\}$ \\
+    Allgemein: $\argmax\{\text{Ws}[X\mid\theta\ ]:\theta\in\Theta]\}$
     \item Umformen zu Log-Lik: $\ln(L(p))=\dots$
     \item Ableitung: \[\frac{\text{d}}{\text{d}p}\ln(L(p))=\dots \overset{!}{=}0 \rightarrow \text{Finde eine Nullstelle}\].
     \item Überprüfe ob Maximum mit
     \[\frac{\text{d}^2}{\text{d}p^2}\ln(L(p))=\dots \overset{?}{<}0\]
     \item Behandle die Randfälle $p\in\{0,1\}$ und erläutere, wie das für MLE kein Problem ist.
 \end{enumerate}
+
+\section*{Maximum-A-Posteriori-Schätzer}
+\begin{align}
+    \theta_{MAP}^\ast &:= \argmax\left\{\text{Ws}[\theta\mid X]\right\} \\ \text{(bzw)}
+    &:= \argmax\left\{f(\theta\mid X):\theta\in\Theta\right\} \\
+    &:=\argmax_{\theta\in\Theta}\left\{\log(f(x\mid\theta)+\log(f_0(\theta))\right\}
+\end{align}
+wo $\text{Ws}[\theta\mid X]$ die Posteriori-Wahrscheinlichkeit ist mit \[\text{Ws}[\theta\mid X]=\frac{\text{Ws}[X\mid \theta]\cdot f_0[\theta]}{\text{Ws}[X]}\] bzw. $f(\theta\mid x)$ eine Dichtefunktion für den Parameterraum $\Theta$ ist, nachdem die Daten gegeben sind (Posterior).
 
 \section*{Hypothesentest}
 \begin{enumerate}
@@ -427,9 +448,6 @@ Für einen gegebenen r:
     \text{Entscheidung nach } X \lessgtr A
     \]
 \end{enumerate}
-
-\section*{Maximum-A-Posteriori-Schätzer}
-\[\theta_{MAP}^\ast:=\argmax_{\theta\in\Theta}\left\{\log(f(x\mid\theta)+f_0(\theta)\right\}\]
 
 
 \section*{Markov-Kette}
