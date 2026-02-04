@@ -23,11 +23,21 @@
 
 Für Entscheidungsproblem $L\overset{?}{\in}\mathcal{NP}\text{-vollständig}$:
 \begin{enumerate}
-    \item Zeige, dass $L \in \mathcal{NP}$.
-    \item Zeige, dass $L$ $\mathcal{NP}$-hart ist (mit $L' \le_p L$).
+    \item Zeige, dass $L \in \mathcal{NP}$: Zertifikat, Größe, Verifikator, Polynomialzeit
+    \item Zeige, dass $L$ $\mathcal{NP}$-hart ist mit $L' \le_p L$, wo $L'$ ein bekanntes $\mathcal{NP}$-vollständiges  Problem ist. Definiere eine Abbildung $f$, die jede Instanz $x \in L'$ in eine Instanz $f(x) \in L$ transformiert:
+    \begin{enumerate}
+        \item Beschreibe \textbf{Gadgets}: die Einschränkungen des zu zeigenden Problems.
+        \item Zeige, dass $f(x)$ in \textbf{Polynomialzeit} erfolgt.
+    \end{enumerate}
+    \item Korrektheit: Zeige $x \in L' \iff f(x) \in L$:
+    \begin{enumerate}
+        \item $\Rightarrow$:  Wenn $x$ eine Ja-Instanz von $L'$ ist, dann besitzt $f(x)$ eine Lösung in $L$.
+        \item $\Leftarrow$: Zeige, dass die Gadgets nur eine dem ursprünglichen Problem entsprechende Lösung zulassen.
+    \end{enumerate}
 \end{enumerate}
 
-\subsection*{Schritt 1: $L \in \mathcal{NP}$}
+\begin{comment}
+    \subsection*{Schritt 1: $L \in \mathcal{NP}$}
 \glqq effizient überprüfbar\grqq
 \begin{itemize}
     \item \textbf{Zertifikat:} Definiere, wie ein Zertifikat $c$ für eine Ja-Instanz aussieht ($\sim$ Knotenfolge, Belegung).
@@ -35,23 +45,11 @@ Für Entscheidungsproblem $L\overset{?}{\in}\mathcal{NP}\text{-vollständig}$:
     \item \textbf{Verifikator:} Beschreibe einen Algorithmus $V(x, c)$, der prüft, ob $c$ eine gültige Lösung für $x$ ist.
     \item \textbf{Laufzeit:} Zeige, dass $V$ in Polynomialzeit arbeitet.
 \end{itemize}
+\end{comment}
 
-\subsection*{Schritt 2: $\mathcal{NP}$-Härte}
-Wähle ein bekanntes $\mathcal{NP}$-vollständiges  Problem $L'$ und zeige $L' \le_p L$.
 
-\subsubsection*{Die Reduktion}
-Definiere eine Abbildung $f$, die jede Instanz $x \in L'$ in eine Instanz $f(x) \in L$ transformiert.
-\begin{itemize}
-    \item Beschreibe die \textbf{Gadgets}, die eigentlich Einschränkungen des zu zeigenden Problems darstellen.
-    \item Zeige: die Konstruktion ($f(x)$) erfolgt in \textbf{polynomialer Zeit} bzgl. $|x|$.
-\end{itemize}
 
-\subsubsection*{Korrektheitsbeweis}
-Zeige, dass die Reduktion die Entscheidungseigenschaft erhält: $x \in L' \iff f(x) \in L$.
-\begin{itemize}
-    \item \textbf{Hinrichtung ($\Rightarrow$):} Wenn $x$ eine Ja-Instanz von $L'$ ist, dann besitzt $f(x)$ eine Lösung in $L$.
-    \item \textbf{Rückrichtung ($\Leftarrow$):} Wenn $f(x)$ eine Lösung in $L$ besitzt, lässt sich daraus eine Lösung für $x$ in $L'$ konstruieren / Zeige, dass die Gadgets nur eine dem ursprünglichen Problem entsprechende Lösung zulassen.
-\end{itemize}
+
 
 \section*{Beziehung $NPO \sim \mathcal{NP}$}
 
@@ -79,9 +77,6 @@ Muss die folgenden in Polynomialzeit ausführen:
     \item \textbf{Maßberechnung:} Berechne $v = \mu(x, z)$ unter Verwendung der Maschine $M_\mu$ (möglich da $\mu$ in Polynomialzeit berechenbar ist).
     \item \textbf{Schwellenwert-Vergleich:} Prüfe, ob $v$ das Kriterium $\text{opt}(v, B)$ erfüllt (z.\,B. $v \ge B$ bei Maximierung).
 \end{enumerate}
-
-\subsection*{Schritt 4: Fazit}
-Da alle Komponenten von $M$ (Prüfung von $I$, Berechnung von $\mu$, Vergleich) in Polynomialzeit bzgl. $|x|$ ablaufen, arbeitet der Verifikator $M$ in Polynomialzeit. Somit gilt $P' \in \mathcal{NP}$.
 
 \section*{Chernoff-Schranken}
 Seien $X_1, \dots, X_n$ nun $n$ unabhängige binäre Zufallsvariablen mit $\text{Ws}(X_i = 1) = p_i$. Sei $X = \sum_{i=1}^n X_i$ eine reelle Zufallsvariable, dann gilt für $\delta > 0$:
@@ -111,53 +106,49 @@ Seien $X_1, \dots, X_n$ $n$ unabhängige binäre Zufallsvariablen mit $\text{Ws}
 \]
 
 \vfill\null \columnbreak
-\section*{Entwurf von Approximationsalgorithmen}
+\section*{Entwurf von Approx.algorithmen}
+Sei Problem P gegeben mit Eingabe (Instanzen), Lösungen und Optimum ($\mu$).
 
-\subsection*{Schritt 1: Strategie}
+\subsection*{a) Zeige $P\in \mathcal{NPO}$}
+\begin{enumerate}
+    \item Eingabe: Die Instanzen müssen polynomiell überprüfbar sein.
+    \item Lösung: muss polynomiell in der Eingabegröße beschränkt sein.
+    \item Maß ($\mu$) muss in Polynomialzeit berechenbar sein.
+\end{enumerate}
+
+\subsection*{b.1) Algorithmus (r-Approx)}
+r ist gegeben.
 \begin{itemize}
-    \item \textbf{Ansatz:} Identifiziere eine Heuristik (oft ein \textit{Greedy-Ansatz}), die lokal optimale Entscheidungen trifft.
-    \item \textbf{Idee:} Beschreibe verbal, wie sukzessive eine Lösung aufgebaut wird.
+    \item Benutze einen Greedy-Ansatz, um für jedes Element lokal optimal zu entscheiden. Das heißt, z.B., ein Element wird entschieden/zugewiesen, so dass es an dem Moment den geringsten Schaden oder höchsten Nutzen erzeugt für die Maßfunktion.
+    \item Zeige, dass die Laufzeit polynomiell ist.
 \end{itemize}
 
-\subsection*{Schritt 2: Algorithmus als Pseudo-Code}
+\subsection*{b.2) Korrektheit / Approx.güte $\Gamma_A$}
+Zeige: das Verhältnis zwischen dem Optimum und dem Algorithmusergebnis ($y$) ist beschränkt. Hier wird Maximierung erläutert. \glqq Elementanzahl\grqq\ steht informell für die Elemente, die in die Maßberechnung fließen.
 \begin{itemize}
-    \item \textbf{Initialisierung:} Startzustand der Variablen.
-    \item \textbf{Iteration:} Eine Schleife über alle Elemente der Eingabe (Knoten, Zahlen, etc.).
-    \item \textbf{Entscheidungsregel:} Die Bedingung, nach der ein Element zugeordnet wird.
-\end{itemize}
-
-\subsection*{Schritt 3: Beweise Approx.güte $\Gamma_A$}
-Zeige: das Verhältnis zwischen dem Optimum $x^*$ und dem Ergebnis $x$ aus dem Algorithmus ist beschränkt.
-\begin{itemize}
-    \item \textbf{Untere/Obere Schranke des Algorithmus:} Zeige, welchen Wert der Algorithmus mindestens erzielt.
-    \item \textbf{Verhältnis zum Optimum:} Setze dies in Relation zum bestmöglichen Wert $x^*$.
+    \item \textbf{Untere Schranke des Algorithmus:} Zeige, welchen Wert der Algorithmus mindestens erzielt. $\rightarrow$ Oft $\frac{\text{Elementenzahl}}{r}$ für Maximierung.
+    \item \textbf{Verhältnis zum Optimum:} Setze dies in Relation zum Optimalen. Optimum ist ja $\leq \text{Elementanzahl}$ für Maximierung.
     \item \textbf{Güte berechnen:}
-    \[ \Gamma_A(I) = \max \left( \frac{\text{opt}(I)}{A(I)}, \frac{A(I)}{\text{opt}(I)} \right) \le \dots \]
+    \[ \Gamma_A(x,y) = \frac{\text{Elementanzahl}}{\frac{\text{Elementenzahl}}{r}}=r \]
 \end{itemize}
 
-\subsection*{Schritt 4: Komplexitätsanalyse}
-\begin{itemize}
-    \item Zeige, dass der Algorithmus in Polynomialzeit läuft.
-    \item Analysiere die Anzahl der Schleifendurchläufe und den Aufwand pro Schritt.
-\end{itemize}
-
-\vfill\null \columnbreak
+\begin{comment}
+    \vfill\null \columnbreak
 \section*{Entwurf eines PTAS}
 
-Idee: Löse den \glqq schwierigsten\grqq\ Teil des Problems exakt und ergänze den Rest effizient.
+Idee: Löse den \glqq schwierigsten\grqq\ Teil des Problems exakt und ergänze den Rest effizient ODER erzeuge die Antwort iterative durch lokale Optima.
 
 \subsection*{Schritt 1: wichtiges Teilproblem}
-Welche Elemente der Eingabe haben den größten Einfluss auf das Optimum? $\rightarrow$ Eine Heuristik
+Welche Elemente haben den größten Einfluss aufs Optimum? Ideen:
 \begin{itemize}
-    \item \textbf{Sortierung:} Sortiere die Eingabe nach Relevanz bzw. verfolge einen Greedy-Ansatz.
-    \item \textbf{$\epsilon$:} Bestimme ein Teilproblem abhängig von $\epsilon$. $\rightarrow$ wie viele Elemente müssen exakt betrachtet werden, um den Fehler unter $\epsilon$ zu halten.
+    \item \textbf{Sortierung:} Sortiere die Eingabe nach Relevanz. Bestimme das Teilproblem abhängig von $\epsilon$. $\rightarrow$ wie viele Elemente müssen exakt betrachtet werden, um den Fehler unter $\epsilon$ zu halten.
+    \item \textbf{Lokale Optima:} Für jedes Element, entscheide danach, wie es an dem Moment zu Maß beitragen würde.
 \end{itemize}
 
 \subsection*{Schritt 2: Partielle exakte Lösung}
-Ein Teil vom Problem wird mit Brute Force erledigt.
 \begin{itemize}
-    \item Da das Teilproblem von dem fixen $\epsilon$ abhängt, ist es konstant bzgl. Eingabegröße n.
-    \item Durchlaufe alle Möglichkeiten (Brute Force) für das erste Teilproblem und wähle die optimalen.
+    \item Ein Teil des Problems wird mit Brute Force erledigt. Da das Teilproblem von dem fixen $\epsilon$ abhängt, ist es konstant bzgl. Eingabegröße n.
+    \item Exakte Lösung gibt es dann nicht für nicht von epsilon abhängige Weise.
 \end{itemize}
 
 \subsection*{Schritt 3: Greedy-Erweiterung}
@@ -190,28 +181,31 @@ Der Rest wird mit einer effizienten Heuristik erledigt.
 
     \item \textbf{Kombination und algebraische Umformung:} Setze beide Schranken in das Verhältnis $\Gamma_A(x) = \frac{A(x)}{\mu^*(x)}$ ein. Zeige, dass der verbleibende Fehlerterm $\leq$ der gewünschten Schranke (z.\,B. $1 + \epsilon$) ist.
 \end{itemize}
-
 \subsection*{Schritt 5: Komplexitätsanalyse}
 In Abhängigkeit von der Eingabegröße $\|x\|$ (Anzahl der Elemente $n$ und deren Bit-Länge $L$) sowie der Fehlerschranke $\epsilon$:
 \begin{itemize}
     \item \textbf{Vorbereitungsphase / Heuristik:} polynomiell bzgl. der Eingabegröße.
     \item \textbf{Exakter Teil (Brute Force):} Die Enumeration aller Kombinationen benötigt Zeit $O(f(k))$, wobei $f$ oft eine Exponentialfunktion ist. Da $k$ für ein festes $\epsilon$ als Konstante betrachtet wird, bleibt dieser Term für die Definition der Polynomialzeit zulässig.
-    \item \textbf{Greedy-Erweiterung:} Behandeln des Rests läuft in Polynomialzeit ab.
+    \item \textbf{Greedy-Erweiterung:} Die Behandlung des Rests läuft in polynomialer Zeit ab.
 \end{itemize}
 
 Die Gesamtlaufzeit hat die Form $O(poly(n) + f(1/\epsilon) \cdot poly(n))$. Für jedes \textit{feste} $\epsilon > 0$ ergibt dies eine polynomiale Laufzeit bzgl. der Eingabegröße, da der exponentielle Term $2^{1/\epsilon}$ dann eine (potenziell sehr große) Konstante darstellt.
+\end{comment}
 
+\vfill\null\columnbreak
 \section*{PTAS-Reduktion}
 
-Übertrage die Approximierbarkeit eines Problems $A$ auf ein Problem $B$. Hier müssen nicht nur die Instanzen, sondern auch die Fehlerparameter und Lösungen transformiert werden.
+Übertrage die Approximierbarkeit eines Problems $A$ auf ein Problem $B$. Hier müssen nicht nur die Instanzen, sondern auch die Fehlerparameter und Lösungen abgebildet werden.
 
-\subsection*{Definition und Komponenten}
+\subsection*{Reduktion}
 Eine PTAS-Reduktion $A \le_{PTAS} B$ besteht aus einem Tripel $\rho = (f, g, \alpha)$ mit folgenden Eigenschaften:
-\begin{itemize}
-    \item \textbf{Instanz-Transformation $f(x, \epsilon)$:} Überführt eine Instanz $x$ von $A$ und einen Fehlerparameter $\epsilon$ in eine Instanz von $B$. Die Laufzeit muss polynomiell in $\|x\|$ sein (für festes $\epsilon$) .
-    \item \textbf{Lösungs-Transformation $g(x, y, \epsilon)$:} Überführt eine Lösung $y$ der Instanz $f(x, \epsilon)$ zurück in eine Lösung für $x$ in Problem $A$. Auch diese Berechnung muss in Polynomialzeit erfolgen.
-    \item \textbf{Fehler-Funktion $\alpha(\epsilon)$:} Berechnet aus dem gewünschten Fehler $\epsilon$ für Problem $A$ den notwendigen Fehler für Problem $B$. $\alpha$ muss in Polynomialzeit berechenbar sein.
-\end{itemize}
+\begin{enumerate}
+    \item Beschreibe die Reduktionsidee. $\rightarrow f(x, \epsilon)$:
+    Überführt eine Instanz $x$ von $A$ und einen Fehlerparameter $\epsilon$ in eine Instanz von $B$.
+    \item Beschreibe, wie die Lösung von B in die Lösung von A zurücktransformiert wird:  $\rightarrow g(x, y, \epsilon)$: Überführt eine Lösung $y$ der Instanz $f(x, \epsilon)$ zurück in eine Lösung für $x$ im Problem $A$.
+    \item Definiere $\alpha$ (oft $\alpha(\epsilon):=\epsilon$). Berechnet aus dem gewünschten Fehler $\epsilon$ für Problem $A$ den notwendigen Fehler für Problem $B$.
+    \item Zeige, dass $f$,$g$ und $\alpha$ in Polynomialzeit berechenbar sind.
+\end{enumerate}
 
 \begin{comment}
 \subsection*{Transitivität}
@@ -224,15 +218,20 @@ PTAS-Reduktionen sind transitiv. Gilt $A \le_{PTAS}^{\rho_1} B$ und $B \le_{PTAS
 \end{enumerate}
 \end{comment}
 
-\subsection*{Erhalt der Approximationsgüte}
-Das zentrale Gütekriterium einer PTAS-Reduktion ist die Erhaltung der Fehlerschranke. Muss zeigen:
-\[ \Gamma(f(x, \epsilon), y) \le 1 + \alpha(\epsilon) \implies \Gamma(x, g(x, y, \epsilon)) \le 1 + \epsilon \]
-
+\subsection*{Korrektheit}
 \begin{enumerate}
-    \item Sei $S$ eine Lösung für $f(x,\epsilon)$ und $S^\ast$ die optimale.
-    \item Dann gilt
-    \[\frac{\text{Maß für }f(x, \epsilon)}{\text{Opt. für }f(x, \epsilon)}=\Gamma_{\mu'}(f(x, \epsilon),S)\leq 1 + \alpha(\epsilon)=1+\epsilon\]
-    \item \[\frac{\text{Maß für x}}{\text{Optimum für x}}\leq\frac{\mu(S)}{\mu(S^\ast)}=1+\epsilon\]
+    \setcounter{enumi}{4}
+    \item Zeige, dass die Lösung von B mithilfe von $g()$ zu einer zulässigen Lösung für B abgebildet wird. Benutze hierfür die beschriebene $f-g$-Beziehung.
+\end{enumerate}
+
+\subsection*{Approximationsgüte}
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item Zeige: \[ \Gamma(f(x, \epsilon), y) \le 1 + \alpha(\epsilon) \implies \Gamma(x, g(x, y, \epsilon)) \le 1 + \epsilon \]
+    \begin{enumerate}
+        \item Wissen: Güte für eine Lösung von B $\leq 1+\alpha(\epsilon)=1+\epsilon$
+        \item Benutze $g(x,y,\epsilon)^\ast$ um zu zeigen: $\frac{\text{A-Lösung}}{\text{A-Optimum}}\overset{\ast}{=}\frac{\text{B-Lösung}}{\text{B-Optimum}}\overset{\substack{wie\\oben}}{=}1+\epsilon$
+    \end{enumerate}
 \end{enumerate}
 
 \vfill\null \columnbreak
@@ -271,13 +270,20 @@ Ab hier ist $\tilde{w}:\bar{\Sigma}_0^2 \rightarrow \mathbb{R}$ eine Kostenfunkt
 Ein optimaler Steiner-String ist
 \[s^\ast=\argmin_{s'\in \Sigma^{\ast}} E_s(s')\]
 
-\end{multicols}
+\vfill\null \columnbreak
 \section*{Carrillo-Lipman Algorithm}
+\begin{enumerate}
+    \item Berechne P und S Matrizen.
+    \item Bestimme P+S Matrix durch zellenweise Addition.
+    \item Der Heap funktioniert wie folgt: Jede Zelle im Heap mit $\leq C$ soll alle nächsten (rechts, unten und unten diagonale) mit ins Heap nehmen. Am Anfang steht die Zelle links oben im Heap.
+    \item $C_{s,t}:=C-\sum_{(s_i,s_j)\neq (s,t)}d(s_i,s_j)=^\ast C$ \
+    ($=^\ast$ gilt, wenn es nur zwei Sequenzen s, t gibt.)
+\end{enumerate}
 
+\begin{comment}
 \SetKwInput{KwIn}{Input}
 \SetKwInput{KwOut}{Output}
-
-\begin{algorithm}[H]
+    \begin{algorithm}[H]
 \caption{Carrillo\_Lipman($\{s_1, \dots, s_k\}$, $k$, $C$)}
 \KwIn{A set of $k$ sequences $S = \{s_1, \dots, s_k\}$, an integer $k$, and a cost threshold $C$.}
 \KwOut{The score of the multiple sequence alignment.}
@@ -307,6 +313,7 @@ Ein optimaler Steiner-String ist
     \Return $D[|s_1|, \dots, |s_k|]$\;
 }
 \end{algorithm}
+\end{comment}
 
 \section*{C-optimale Schnittpositionsfamilie}
 \textbf{Gegeben:} eine Menge von Sequenzen $S$ (hier drei: $s_1,s_2,s_3$) und ein Index $c_1$.\\
@@ -321,8 +328,6 @@ Ein optimaler Steiner-String ist
     \item Koordinaten zu Alignments interpretieren: $(c_1, x_1, y_2) \rightarrow$ \glqq Nimm die ersten $c_1$ Buchstaben von $s_1$, die ersten $x_1$ von $s_2$ und die ersten $y_2$ von $s_3$. Aligniere diese und die Restlichen optimal.\grqq
 \end{enumerate}
 
-\vfill\null \pagebreak
-\begin{multicols}{2}
 
 \section*{Center-Star-Methode}
 \begin{enumerate}
