@@ -16,6 +16,10 @@
 \setlist[itemize]{leftmargin=*}
 \setlist[enumerate]{leftmargin=*}
 
+\usepackage{fancyhdr}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\rhead{Kompiliert am \today\ um \currenttime}
+\pagestyle{fancy}
 \begin{document}
 \begin{multicols}{2}
 
@@ -230,7 +234,7 @@ PTAS-Reduktionen sind transitiv. Gilt $A \le_{PTAS}^{\rho_1} B$ und $B \le_{PTAS
     \item Zeige: \[ \Gamma_B(f(x, \epsilon), y) \le 1 + \alpha(\epsilon) \implies \Gamma_A(x, g(x, y, \epsilon)) \le 1 + \epsilon \]
     \begin{enumerate}
         \item Wissen: Güte für eine Lösung von B $\leq 1+\alpha(\epsilon)=1+\epsilon$
-        \item Benutze $g(x,y,\epsilon)^\ast$ um zu zeigen: $\frac{\text{A-Lösung}}{\text{A-Optimum}}\overset{\ast}{=}\frac{\text{B-Lösung}}{\text{B-Optimum}}\overset{\substack{wie\\oben}}{=}1+\epsilon$
+        \item Benutze $g(x,y,\epsilon)^\ast$ um zu zeigen: $\frac{\text{A-Lösung}}{\text{A-Optimum}}\overset{\ast}{=}\frac{\text{B-Lösung}}{\text{B-Optimum}}\overset{\substack{\text{wie}\\\text{oben}}}{=}1+\epsilon$
     \end{enumerate}
 \end{enumerate}
 
