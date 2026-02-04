@@ -1,0 +1,486 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[left=2cm, right=2cm, bottom=4cm]{geometry}
+\usepackage[ngerman]{babel}
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+\usepackage[utf8]{inputenc}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{comment}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*}
+\setlist[enumerate]{leftmargin=*}
+
+\usepackage{fancyhdr}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\rhead{Kompiliert am \today\ um \currenttime}
+\pagestyle{fancy}
+\begin{document}
+\begin{multicols}{2}
+
+\section*{Beweise $\mathcal{NP}$-Vollständigkeit}
+
+Für Entscheidungsproblem $L\overset{?}{\in}\mathcal{NP}\text{-vollständig}$:
+\begin{enumerate}
+    \item Zeige, dass $L \in \mathcal{NP}$: Zertifikat, Größe, Verifikator, Polynomialzeit
+    \item Zeige, dass $L$ $\mathcal{NP}$-hart ist mit $L' \le_p L$, wo $L'$ ein bekanntes $\mathcal{NP}$-vollständiges  Problem ist. Definiere eine Abbildung $f$, die jede Instanz $x \in L'$ in eine Instanz $f(x) \in L$ transformiert:
+    \begin{enumerate}
+        \item Beschreibe \textbf{Gadgets}: die Einschränkungen des zu zeigenden Problems.
+        \item Zeige, dass $f(x)$ in \textbf{Polynomialzeit} erfolgt.
+    \end{enumerate}
+    \item Korrektheit: Zeige $x \in L' \iff f(x) \in L$:
+    \begin{enumerate}
+        \item $\Rightarrow$:  Wenn $x$ eine Ja-Instanz von $L'$ ist, dann besitzt $f(x)$ eine Lösung in $L$.
+        \item $\Leftarrow$: Zeige, dass die Gadgets nur eine dem ursprünglichen Problem entsprechende Lösung zulassen.
+    \end{enumerate}
+\end{enumerate}
+
+\begin{comment}
+    \subsection*{Schritt 1: $L \in \mathcal{NP}$}
+\glqq effizient überprüfbar\grqq
+\begin{itemize}
+    \item \textbf{Zertifikat:} Definiere, wie ein Zertifikat $c$ für eine Ja-Instanz aussieht ($\sim$ Knotenfolge, Belegung).
+    \item \textbf{Größe:} Argumentiere kurz, dass die Länge des Zertifikats $|c|$ polynomiell in der Eingabegröße $|x|$ ist.
+    \item \textbf{Verifikator:} Beschreibe einen Algorithmus $V(x, c)$, der prüft, ob $c$ eine gültige Lösung für $x$ ist.
+    \item \textbf{Laufzeit:} Zeige, dass $V$ in Polynomialzeit arbeitet.
+\end{itemize}
+\end{comment}
+
+
+
+
+
+\section*{Beziehung $NPO \sim \mathcal{NP}$}
+
+Ein Optimierungsproblem $P = (I, S, \mu, \text{opt})$ liegt in $NPO$, wenn die Instanzmenge $I$ entscheidbar ist, die Lösungen $S(x)$ polynomiell beschränkt sind und die Zielfunktion $\mu$ effizient berechenbar ist.
+
+\subsection*{Schritt 1: Definiere das Ents.problem $P'$}
+Benutze für $P'$ einen gegebenen Schwellenwert $B$:
+\[ P' = \left\{
+\begin{aligned}
+(x,B) \mid\;& x \in I, \ \exists y \in S(x) \\
+& \text{mit}\ \mu(x,y) \ge B\ (\text{bzw. } \le B)
+\end{aligned} \right\} \]
+
+
+\subsection*{Schritt 2: Zertifikat}
+\begin{itemize}
+    \item \textbf{Zertifikat:} Als Zertifikat $z$ für eine Instanz $x$ wähle eine potenzielle Lösung $y \in S(x)$.
+    \item \textbf{Polynomielle Größe:} Da $P \in NPO$, existiert ein Polynom $p$, sodass für alle $y \in S(x)$ gilt: $|y| \le p(|x|)$. Das Zertifikat ist somit polynomiell beschränkt.
+\end{itemize}
+
+\subsection*{Schritt 3: Verifikator $M(x, B, z)$}
+Muss die folgenden in Polynomialzeit ausführen:
+\begin{enumerate}
+    \item \textbf{Instanzprüfung:} Teste, ob $x \in I$ (möglich da $I \in P$) oder ob $x$ polynomiell kodierbar ist.
+    \item \textbf{Maßberechnung:} Berechne $v = \mu(x, z)$ unter Verwendung der Maschine $M_\mu$ (möglich da $\mu$ in Polynomialzeit berechenbar ist).
+    \item \textbf{Schwellenwert-Vergleich:} Prüfe, ob $v$ das Kriterium $\text{opt}(v, B)$ erfüllt (z.\,B. $v \ge B$ bei Maximierung).
+\end{enumerate}
+
+\section*{Chernoff-Schranken}
+Seien $X_1, \dots, X_n$ nun $n$ unabhängige binäre Zufallsvariablen mit $\text{Ws}(X_i = 1) = p_i$. Sei $X = \sum_{i=1}^n X_i$ eine reelle Zufallsvariable, dann gilt für $\delta > 0$:
+
+\[
+\begin{aligned}
+\text{Ws}[X \ge (1+\delta)\,\mathbb{E}(X)]
+&\le \left[\frac{e^\delta}{(1+\delta)^{1+\delta}}\right]^{\mathbb{E}(X)} \\
+&\le \exp\!\left(-\frac{\mathbb{E}(X)\,\delta^2}{3}\right)
+\end{aligned}
+\]
+
+\[
+\begin{aligned}
+\operatorname{Ws}[X \le (1-\delta)\,\mathbb{E}(X)]
+&\le \left[\frac{e^{-\delta}}{(1-\delta)^{1-\delta}}\right]^{\mathbb{E}(X)} \\
+&\le \exp\!\left(-\frac{\mathbb{E}(X)\,\delta^2}{2}\right)
+\end{aligned}
+\]
+
+
+\section*{Ungleichung von Chebyshev}
+Seien $X_1, \dots, X_n$ $n$ unabhängige binäre Zufallsvariablen mit $\text{Ws}(X_i = 1) = p_i$. Sei $X = \sum_{i=1}^n X_i$ eine reelle Zufallsvariable, dann gilt für $\delta > 0$:
+
+\[
+\text{Ws}(|X - \mathbb{E}(X)| \geq \delta) \leq \frac{V(X)}{\delta^2}
+\]
+
+\vfill\null \columnbreak
+\section*{Entwurf von Approx.algorithmen}
+Sei Problem P gegeben mit Eingabe (Instanzen), Lösungen und Optimum ($\mu$).
+
+\subsection*{a) Zeige $P\in \mathcal{NPO}$}
+\begin{enumerate}
+    \item Eingabe: Die Instanzen müssen polynomiell überprüfbar sein.
+    \item Lösung: muss polynomiell in der Eingabegröße beschränkt sein.
+    \item Maß ($\mu$) muss in Polynomialzeit berechenbar sein.
+\end{enumerate}
+
+\subsection*{b.1) Algorithmus (r-Approx)}
+r ist gegeben.
+\begin{itemize}
+    \item Benutze einen Greedy-Ansatz, um für jedes Element lokal optimal zu entscheiden. Das heißt, z.B., ein Element wird entschieden/zugewiesen, so dass es an dem Moment den geringsten Schaden oder höchsten Nutzen erzeugt für die Maßfunktion.
+    \item Zeige, dass die Laufzeit polynomiell ist.
+\end{itemize}
+
+\subsection*{b.2) Korrektheit / Approx.güte $\Gamma_A$}
+Zeige: das Verhältnis zwischen dem Optimum und dem Algorithmusergebnis ($y$) ist beschränkt. Hier wird Maximierung erläutert. \glqq Elementanzahl\grqq\ steht informell für die Elemente, die in die Maßberechnung fließen.
+\begin{itemize}
+    \item \textbf{Untere Schranke des Algorithmus:} Zeige, welchen Wert der Algorithmus mindestens erzielt. $\rightarrow$ Oft $\frac{\text{Elementenzahl}}{r}$ für Maximierung.
+    \item \textbf{Verhältnis zum Optimum:} Setze dies in Relation zum Optimalen. Optimum ist ja $\leq \text{Elementanzahl}$ für Maximierung.
+    \item \textbf{Güte berechnen:}
+    \[ \Gamma_A(x,y) \leq \frac{\text{Elementanzahl}}{\frac{\text{Elementenzahl}}{r}}=r \]
+\end{itemize}
+
+\begin{comment}
+    \vfill\null \columnbreak
+\section*{Entwurf eines PTAS}
+
+Idee: Löse den \glqq schwierigsten\grqq\ Teil des Problems exakt und ergänze den Rest effizient ODER erzeuge die Antwort iterative durch lokale Optima.
+
+\subsection*{Schritt 1: wichtiges Teilproblem}
+Welche Elemente haben den größten Einfluss aufs Optimum? Ideen:
+\begin{itemize}
+    \item \textbf{Sortierung:} Sortiere die Eingabe nach Relevanz. Bestimme das Teilproblem abhängig von $\epsilon$. $\rightarrow$ wie viele Elemente müssen exakt betrachtet werden, um den Fehler unter $\epsilon$ zu halten.
+    \item \textbf{Lokale Optima:} Für jedes Element, entscheide danach, wie es an dem Moment zu Maß beitragen würde.
+\end{itemize}
+
+\subsection*{Schritt 2: Partielle exakte Lösung}
+\begin{itemize}
+    \item Ein Teil des Problems wird mit Brute Force erledigt. Da das Teilproblem von dem fixen $\epsilon$ abhängt, ist es konstant bzgl. Eingabegröße n.
+    \item Exakte Lösung gibt es dann nicht für nicht von epsilon abhängige Weise.
+\end{itemize}
+
+\subsection*{Schritt 3: Greedy-Erweiterung}
+Der Rest wird mit einer effizienten Heuristik erledigt.
+\begin{itemize}
+    \item Gehe die restlichen Elemente durch.
+    \item Weise das Element so, dass man den geringsten Schaden / größten Nutzen erzielt (lok. Optimum).
+\end{itemize}
+
+\subsection*{Schritt 4: Beweis der Güte}
+
+\textbf{Idee:} Der Beweis beruht darauf, dass das kritische Element im Verhältnis zur bereits akkumulierten Gesamtlast (dem Optimum) so klein ist, dass sein Hinzufügen den relativen Fehler $1+\epsilon$ nicht mehr überschreiten kann.
+
+\begin{itemize}
+    \item \textbf{die kritischen Elemente:} Diese bestimmen das Endergebnis des Algorithmus maßgeblich; oft ist es das letzte Element, das vom Greedy-Teil einer Menge hinzugefügt wurde und dadurch den Zielwert erhöht hat.
+    
+    \item \textbf{Fallunterscheidung:}
+    \begin{enumerate}
+        \item \textbf{Exakte Phase:} Zeige, dass der Algorithmus ein optimales Ergebnis liefert ($\Gamma_A = 1$), wenn das kritische Element bereits im exakt gelösten Teilproblem enthalten ist.
+        \item \textbf{Greedy Phase:} Analysiere den Fall, in dem das kritische Element \underline{erst durch die Heuristik} verarbeitet wurde. Hier muss die Abweichung vom Optimum begrenzt werden.
+    \end{enumerate}
+
+    \item \textbf{Obere Schranke:} Drücke den Wert des Algorithmus $A(x)$ als Summe aus dem Optimum $\mu^*(x)$ und einem \textit{Restfehler} aus. Dieser Fehler wird meist durch die Größe des kritischen Elements (oder dessen Bruchteil) begrenzt, da Greedy-Entscheidungen den Exzess minimieren.
+    
+    \item \textbf{Untere Schranke:} Erstelle eine konservative Abschätzung für $\mu^*(x)$:
+    \begin{itemize}
+        \item Durchschnittswert (nach Partitionen).
+        \item Die Tatsache, dass das Optimum mind. so groß sein muss wie die Summe der kleinsten Elemente der exakten Phase.
+    \end{itemize}
+
+    \item \textbf{Kombination und algebraische Umformung:} Setze beide Schranken in das Verhältnis $\Gamma_A(x) = \frac{A(x)}{\mu^*(x)}$ ein. Zeige, dass der verbleibende Fehlerterm $\leq$ der gewünschten Schranke (z.\,B. $1 + \epsilon$) ist.
+\end{itemize}
+\subsection*{Schritt 5: Komplexitätsanalyse}
+In Abhängigkeit von der Eingabegröße $\|x\|$ (Anzahl der Elemente $n$ und deren Bit-Länge $L$) sowie der Fehlerschranke $\epsilon$:
+\begin{itemize}
+    \item \textbf{Vorbereitungsphase / Heuristik:} polynomiell bzgl. der Eingabegröße.
+    \item \textbf{Exakter Teil (Brute Force):} Die Enumeration aller Kombinationen benötigt Zeit $O(f(k))$, wobei $f$ oft eine Exponentialfunktion ist. Da $k$ für ein festes $\epsilon$ als Konstante betrachtet wird, bleibt dieser Term für die Definition der Polynomialzeit zulässig.
+    \item \textbf{Greedy-Erweiterung:} Die Behandlung des Rests läuft in polynomialer Zeit ab.
+\end{itemize}
+
+Die Gesamtlaufzeit hat die Form $O(poly(n) + f(1/\epsilon) \cdot poly(n))$. Für jedes \textit{feste} $\epsilon > 0$ ergibt dies eine polynomiale Laufzeit bzgl. der Eingabegröße, da der exponentielle Term $2^{1/\epsilon}$ dann eine (potenziell sehr große) Konstante darstellt.
+\end{comment}
+
+\vfill\null\columnbreak
+\section*{PTAS-Reduktion}
+
+Übertrage die Approximierbarkeit eines Problems $A$ auf ein Problem $B$. Hier müssen nicht nur die Instanzen, sondern auch die Fehlerparameter und Lösungen abgebildet werden.
+
+\subsection*{Reduktion}
+Eine PTAS-Reduktion $A \le_{PTAS} B$ besteht aus einem Tripel $\rho = (f, g, \alpha)$ mit folgenden Eigenschaften:
+\begin{enumerate}
+    \item Beschreibe die Reduktionsidee. $\rightarrow f(x, \epsilon)$:
+    Überführt eine Instanz $x$ von $A$ und einen Fehlerparameter $\epsilon$ in eine Instanz von $B$.
+    \item Beschreibe, wie die Lösung von B in die Lösung von A zurücktransformiert wird:  $\rightarrow g(x, y, \epsilon)$: Überführt eine Lösung $y$ der Instanz $f(x, \epsilon)$ zurück in eine Lösung für $x$ im Problem $A$.
+    \item Definiere $\alpha$ (oft $\alpha(\epsilon):=\epsilon$). Berechnet aus dem gewünschten Fehler $\epsilon$ für Problem $A$ den notwendigen Fehler für Problem $B$.
+    \item Zeige, dass $f$,$g$ und $\alpha$ in Polynomialzeit berechenbar sind.
+\end{enumerate}
+
+\begin{comment}
+\subsection*{Transitivität}
+PTAS-Reduktionen sind transitiv. Gilt $A \le_{PTAS}^{\rho_1} B$ und $B \le_{PTAS}^{\rho_2} C$, so folgt daraus $A \le_{PTAS}^{\rho} C$ mit $\rho = (f, g, \alpha)$. Die resultierenden Funktionen ergeben sich aus der Komposition der Einzelreduktionen:
+
+\begin{enumerate}
+    \item \textbf{Instanz-Mapping:} $f(x, \epsilon) = f_2(f_1(x, \epsilon), \alpha_1(\epsilon))$ .
+    \item \textbf{Lösungs-Mapping:} \[g(x, y, \epsilon) = g_1(x, g_2(f_1(x, \epsilon), y, \alpha_1(\epsilon)), \epsilon)\]
+    \item \textbf{Fehler-Mapping:} $\alpha(\epsilon) = \alpha_2(\alpha_1(\epsilon))$ .
+\end{enumerate}
+\end{comment}
+
+\subsection*{Korrektheit}
+\begin{enumerate}
+    \setcounter{enumi}{4}
+    \item Zeige, dass die Lösung von B mithilfe von $g()$ zu einer zulässigen Lösung für A abgebildet wird. Benutze hierfür die beschriebene $f-g$-Beziehung.
+\end{enumerate}
+
+\subsection*{Approximationsgüte}
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item Zeige: \[ \Gamma_B(f(x, \epsilon), y) \le 1 + \alpha(\epsilon) \implies \Gamma_A(x, g(x, y, \epsilon)) \le 1 + \epsilon \]
+    \begin{enumerate}
+        \item Wissen: Güte für eine Lösung von B $\leq 1+\alpha(\epsilon)=1+\epsilon$
+        \item Benutze $g(x,y,\epsilon)^\ast$ um zu zeigen: $\frac{\text{A-Lösung}}{\text{A-Optimum}}\overset{\ast}{=}\frac{\text{B-Lösung}}{\text{B-Optimum}}\overset{\substack{\text{wie}\\\text{oben}}}{=}1+\epsilon$
+    \end{enumerate}
+\end{enumerate}
+
+\vfill\null \columnbreak
+
+\section*{Eigenschaften einer Metrik}
+
+Eine Abbildung $d: X \times X \to \mathbb{R}$ heißt Metrik auf einer Menge $X$, wenn für alle $x, y, z \in X$ die folgenden drei Axiome erfüllt sind:
+
+\begin{itemize}
+    \item \textbf{Definitheit (Positive Definitheit):} 
+    $d(x, y) \ge 0$ und $d(x, y) = 0$ genau dann, wenn $x = y$. 
+    
+    \item \textbf{Symmetrie:} 
+    $d(x, y) = d(y, x)$. 
+    
+    \item \textbf{Dreiecksungleichung:} 
+    $d(x, z) \le d(x, y) + d(y, z)$. 
+
+\end{itemize}
+
+\section*{Sum-of-Pairs Cost}
+Ab hier ist $\tilde{w}:\bar{\Sigma}_0^2 \rightarrow \mathbb{R}$ eine Kostenfunktion.
+\[w(a_1, \dots, a_k) = \sum_{i=1}^k \sum_{j=i+1}^k \tilde{w}(a_i, a_j)
+\]
+
+\section*{Center-Star Cost}
+\[w(a_1, \dots, a_k) = \sum_{\{i,j\}\in E}\tilde{w}(a_i, a_j)
+\]
+
+\section*{Konsensus-Kostenfunktion}
+\[w'(a_1, \dots, a_k) = \min \left\{\sum_{i=1}^k w(a_i, c) : c \in \bar{\Sigma}\right\}
+\]
+
+\section*{Konsensus-Fehler}
+\[E_S(s'):=\sum_{j=1}^kd(s',s_j)\]
+Ein optimaler Steiner-String ist
+\[s^\ast=\argmin_{s'\in \Sigma^{\ast}} E_s(s')\]
+
+\vfill\null \columnbreak
+\section*{Carrillo-Lipman Algorithm}
+\begin{enumerate}
+    \item Berechne P und S Matrizen.
+    \item Bestimme P+S Matrix durch zellenweise Addition.
+    \item Der Heap funktioniert wie folgt: Jede Zelle im Heap mit $\leq C$ soll alle nächsten (rechts, unten und unten diagonale) mit ins Heap nehmen. Am Anfang steht die Zelle links oben im Heap.
+    \item $C_{s,t}:=C-\sum_{(s_i,s_j)\neq (s,t)}d(s_i,s_j)=^\ast C$ \
+    ($=^\ast$ gilt, wenn es nur zwei Sequenzen s, t gibt.)
+\end{enumerate}
+
+\begin{comment}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+    \begin{algorithm}[H]
+\caption{Carrillo\_Lipman($\{s_1, \dots, s_k\}$, $k$, $C$)}
+\KwIn{A set of $k$ sequences $S = \{s_1, \dots, s_k\}$, an integer $k$, and a cost threshold $C$.}
+\KwOut{The score of the multiple sequence alignment.}
+
+\Begin{
+    \For{$1 \le \mu < \nu \le k$}{
+        Compute prefix matrix $P_{\mu,\nu}$ and suffix matrix $S_{\mu,\nu}$ for the pair $(s_\mu, s_\nu)$\;
+        Compute $C_{\mu,\nu} := C - \sum_{(i,j) \neq (\mu,\nu)} d(s_i, s_j)$ \tcp*[r]{$= C' + P_{\mu\nu}(|s_\mu|, |s_\nu|)$}
+    }
+    $\vec{x} := \vec{0}$\;
+    $D[\vec{0}] := 0$\;
+    Initialize min-heap $h$ as empty\;
+    $h.\text{insert}(\vec{x})$\;
+    \While{$h$ is not empty \textbf{and} $\vec{x} \neq (|s_1|, \dots, |s_k|)$}{
+        $\vec{x} := h.\text{delete\_min}()$ \tcp*[r]{the lexicographic smallest}
+        \If{$P_{\mu,\nu}(x_\mu, x_\nu) + S_{\mu,\nu}(x_\mu, x_\nu) \le C_{\mu,\nu}$ for all $1 \le \mu < \nu \le k$}{
+            \For{$\vec{\eta} \in \{0, 1\}^k \setminus \{\vec{0}\}$}{
+                \eIf{not $h.\text{is\_member}(\vec{x} + \vec{\eta})$}{
+                    $h.\text{insert}(\vec{x} + \vec{\eta})$\;
+                    $D[\vec{x} + \vec{\eta}] := D[\vec{x}] + w((\vec{x} + \vec{\eta}) \cdot \vec{\eta})$\;
+                }{
+                    $D[\vec{x} + \vec{\eta}] := \min\{D[\vec{x} + \vec{\eta}], D[\vec{x}] + w((\vec{x} + \vec{\eta}) \cdot \vec{\eta})\}$\;
+                }
+            }
+        }
+    }
+    \Return $D[|s_1|, \dots, |s_k|]$\;
+}
+\end{algorithm}
+\end{comment}
+
+\section*{C-optimale Schnittpositionsfamilie}
+\textbf{Gegeben:} eine Menge von Sequenzen $S$ (hier drei: $s_1,s_2,s_3$) und ein Index $c_1$.\\
+\textbf{Gefragt:} C-optimale Schnittpositionen und MSA.
+\begin{enumerate}
+    \item Für paarweise verschiedene Sequenzen berechne die Präfix (P) und Suffix (S) Matrizen. Achte darauf, dass die S-Matrix ab der unten rechten Ecke ausgefüllt wird.
+    \item Berechne die Zusatzkostenmatrix (C): Zellenweise Addition von P und S minus der Alignment-Score.
+    \item Berechne die finale Matrix $C(c_1, i, j)$ mit
+    \[C(c_1,i,j):=C_{s_1, s_2}(c_1,i)+C_{s_1,s_3}(c_1,j)+C_{s_2,s_3}(i,j)\]
+    Das heißt: Halte in den Zusatzkostenmatrizen von $s_1$-$s_2$ und $s_1$-$s_3$ die $c_1$-te Zeile fest. Dann addiere die Zahl in der $i$-ten Spalte von der $s_1$-$s_2$-Matrix und die Zahl in der $j$-ten Spalte von der $s_1$-$s_3$-Matrix zu der Zelle $(i,j)$ in der Matrix von $s_2$-$s_3$.
+    \item Bestimme in der finalen Matrix die kleinsten Zahlen und ihre Koordinaten. $\rightarrow$ C-optimale Schnittpositionen bzgl. $c_1$ $\rightarrow \{(c_1, x_1, y_2), (c_1, x_2, y_2), \dots\}$ 
+    \item Koordinaten zu Alignments interpretieren: $(c_1, x_1, y_2) \rightarrow$ \glqq Nimm die ersten $c_1$ Buchstaben von $s_1$, die ersten $x_1$ von $s_2$ und die ersten $y_2$ von $s_3$. Aligniere diese und die Restlichen optimal.\grqq
+\end{enumerate}
+
+
+\section*{Center-Star-Methode}
+\begin{enumerate}
+    \item Berechne paarweise Distanzen.
+    \item Bestimme den Center-String $s_c$.
+    \item Aligniere alle übrigen Sequenzen optimal gegen $s_c$.
+    \item Führe die paarweisen Alignments konsistent über den Center-String zu einem MSA zusammen.
+\end{enumerate}
+
+
+\section*{Geliftete PMSA}
+Berechne rekursiv die Distanzen eines optimalen gelifteten PMSA für den Teilbaum $T_v$ gewurzelt am Knoten $v$ markiert mit der Sequenz $s$:
+\[D(v,s)=\sum_{(v,w)\in E(T)}\min_{s'\in S(w)} \left\{d(s,s')+D(w,s')\right\} \]
+$D(v,s)=\infty$ für $s\notin S(v)$ und $D(v,s)=0$ für Blätter.
+\\ \\
+Mit \textbf{legalen Kantenpaaren}:
+\[D(v,s)=\sum_{(v,w)\in E(T)}\min_{(s,s')\in L(v,w)} \left\{d(s,s')+D(w,s')\right\} \]
+$D(v,s)=0$ falls $v$ Blatt mit $s_v=s$
+\\ \\
+\textbf{Uniform:} Ein gelifteter Baum heißt uniform, wenn für jeden Knoten eines Levels entweder alle gelifteten Sequenzen nur vom linken oder nur vom rechten Kind stammen. Durch eine Markierung der Wurzel mit $s\in S$ wird ein eindeutiges uniformes Lifting beschrieben.
+
+%\vfill\null \columnbreak
+\section*{PAM-Matrix}
+\begin{enumerate}
+    \item Relative Häufigkeiten:
+\[p_a :=\frac{1}{2n}\sum_{b\in \Sigma}n_{a,b}\]
+    \item Mutationswahrscheinlichkeiten ($a\neq b$):
+    \[p_{a,b}:=\frac{n_{a,b}}{2n}\cdot\frac{1}{p_a}\cdot\frac{1}{100}\]
+    \[p_{a,a}:=1-\sum_{\substack{b\in\Sigma \\ b\neq a}} p_{a,b}\]
+    \item als Kostenfunktion:
+        \begin{align*}
+        w(a,b) &= \log \left( \frac{p_a \cdot p_{a,b}}{p_a \cdot p_b} \right) \\
+        &= \log \left( \frac{n_{a,b}}{200 \cdot n \cdot p_a \cdot p_b} \right)
+        \end{align*}
+        \begin{align*}
+        w(a,a) &= \log \left( \frac{p_a \cdot p_{a,a}}{p_a \cdot p_a} \right) \\
+        &= \log \left( \frac{200 \cdot n \cdot p_a - \sum_{b \in \Sigma} n_{a,b}}{200 \cdot n \cdot p_a^2} \right).
+        \end{align*}
+\end{enumerate}
+
+% Equation block for w(a, b)
+
+
+% Equation block for w(a, a)
+
+
+\section*{BLOSUM-Matrix}
+Für einen gegebenen r:
+
+\begin{enumerate}
+    \item Teile die Sequenzen nach ihren Längen in Blocks auf.
+    \item In jedem Block gruppiere die Sequenzen in Clustern nach ihrer Ähnlichkeit, so dass die Sequenzidentität eines Clusters nach Single-Linkage nicht weniger als r\% beträgt.
+    \item Bestimme $H_{p,q}^{(\beta)}(a,b)$: zähle Positionen in paarweisen Alignments, wo $a$ und $b$ gegenüberstehen, dividiert durch $|C_p|\cdot|C_q|$.
+    \item $H(a,b)$: Summiere die Matrizen zellenweise.
+    \item \[q_{ab}:=\frac{H(a,b)}{\sum_{a,b\in\Sigma}H(a,b)}\]
+    \[p_a:=\frac{\sum_{b\in \Sigma}H(a,b)}{\Sigma_{a,b\in\Sigma}H(a,b)}\]
+    \item \[w(a,b):=\log_2(\frac{q_{a,b}}{p_a\cdot p_b})\]
+\end{enumerate}
+
+\section*{Maximum-Likelihood-Schätzer}
+\begin{enumerate}
+    \item Likelihood-Funktion: $L(p):=L(p;n)=\dots$
+    \item Ziel: Finde $\theta^\ast:=\argmax_{p\in \Theta}\{L([n\mid N,p])\}$ \\
+    Allgemein: $\argmax\{\text{Ws}[X\mid\theta\ ]:\theta\in\Theta]\}$
+    \item Umformen zu Log-Lik: $\ln(L(p))=\dots$
+    \item Ableitung: \[\frac{\text{d}}{\text{d}p}\ln(L(p))=\dots \overset{!}{=}0 \rightarrow \text{Finde eine Nullstelle}\].
+    \item Überprüfe ob Maximum mit
+    \[\frac{\text{d}^2}{\text{d}p^2}\ln(L(p))=\dots \overset{?}{<}0\]
+    \item Behandle die Randfälle $p\in\{0,1\}$ und erläutere, wie das für MLE kein Problem ist.
+\end{enumerate}
+
+\section*{Maximum-A-Posteriori-Schätzer}
+\begin{align}
+    \theta_{MAP}^\ast &:= \argmax\left\{\text{Ws}[\theta\mid X]\right\} \\ \text{(bzw)}
+    &:= \argmax\left\{f(\theta\mid X):\theta\in\Theta\right\} \\
+    &:=\argmax_{\theta\in\Theta}\left\{\log(f(x\mid\theta)+\log(f_0(\theta))\right\}
+\end{align}
+wo $\text{Ws}[\theta\mid X]$ die Posteriori-Wahrscheinlichkeit ist mit \[\text{Ws}[\theta\mid X]=\frac{\text{Ws}[X\mid \theta]\cdot f_0[\theta]}{\text{Ws}[X]}\] bzw. $f(\theta\mid x)$ eine Dichtefunktion für den Parameterraum $\Theta$ ist, nachdem die Daten gegeben sind (Posterior).
+
+\section*{Hypothesentest}
+\begin{enumerate}
+    \item \textbf{Bestimme Richtung:} Was besagt die Alternative? Wie würde sie die Zufallsvariable beeinflussen?
+    \item \textbf{Ablehnungsbereich:} (Wsl von beobachteten und extremeren Ereignissen): $Ws(N):=$ $\text{Ws}[X \leq N]$ oder $\text{Ws}[X \geq N]$
+    \item \textbf{Signifikanz:} $Ws\overset{!}{=}\alpha$
+    \item Löse nach N.
+    \item Bestimme den (Nicht-)Ablehnungsbereich für die Werte von N.
+\end{enumerate}
+
+%\vfill\null\columnbreak
+\section*{Likelihood Ratio Test}
+
+\begin{enumerate}
+    \item
+    \[
+    \Lambda(x) = \frac{L(\theta_0; x)}{L(\theta_1; x)} = f(x)
+    \]
+
+    \item \textbf{Significance Level ($\alpha$):}
+    \[
+    P[\Lambda(x) \le \lambda \mid \theta_0] \overset{!}{=} \alpha
+    \]
+
+    \item \textbf{Transformation to Critical Region:}
+    \[
+    \Lambda(x) \le \lambda \iff f(x) \lessgtr \lambda \iff x \lessgtr g(\lambda)
+    \]
+
+    \item \textbf{Probability Distribution of $X$:}
+    \begin{align*}
+    P\!\left[X \lessgtr g(\lambda)\mid \theta_0\right]
+    &= P\!\left[X \lessgtr A\right] \\
+    &= \text{(use underlying prob distro)} \\
+    &= h(A).
+    \end{align*}
+
+    \item \textbf{Solve for Critical Value $A$:}
+    \[
+    h(A) = \alpha = 0.05
+    \]
+
+    \item \textbf{Decision Rule:}
+    \[
+    \text{Entscheidung nach } X \lessgtr A
+    \]
+\end{enumerate}
+
+
+\section*{Markov-Kette}
+Zeige, dass eine Zufallsvariablenfolge Markov-Kette ist: \[\text{Ws}[X_n=q_n\mid X_{n-1}=q_{n-1}] = \dots = \] \[\text{Ws}[X_n=q_n\mid (X_{n-1},\dots,X_1)=(q_{n-1},\dots,q_1)]\] \\ \\
+
+\textbf{Stationäre Verteilung} $\hat{p}$ findet man mit:
+\[\hat{p}\cdot P =\hat{p}\]
+
+
+\textbf{ergodisch} $\iff$ \textbf{irreduzibel} $\land$ \textbf{aperiodisch} \\
+Sei $(Q, P, \pi)$ ein Markov-Modell.
+\begin{enumerate}
+    \item \textbf{aperiodisch:} wenn alle Zustände $q \in Q$ aperiodisch sind (also Periode 1 haben). Die Periode $d_q$ eines Zustands $q \in Q$ ist definiert als
+\[
+d_q := \text{ggT} \left\{ k \in \mathbb{N} : 
+\begin{aligned} 
+&\exists (q_0, \dots, q_k) \in Q^{k+1} \wedge q_0 = q_k = q \\ 
+&\wedge \ \forall i \in [0 : k-1] p_{q_i, q_{i+1}} > 0 
+\end{aligned} 
+\right\}.
+\]
+
+    \item \textbf{irreduzibel:} wenn es für alle Paare $(q,q') \in Q^2$ ein $k\in \mathbb{N}$ gibt, so dass $p_{q,q'}^{(k)}>0$.
+\end{enumerate}
+
+\end{multicols}
+\end{document}
